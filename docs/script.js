@@ -51,20 +51,54 @@ document.addEventListener('DOMContentLoaded', function() {
         const company = document.getElementById('company').value;
         const message = document.getElementById('message').value;
         
-        const subject = `OTMR Data Services Inquiry from ${name}`;
-        const body = `Name: ${name}
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+        
+        // Send to Slack
+        fetch('/api/slack-webhook', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, company, message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Reset form
+            document.getElementById('contact-form').reset();
+            
+            // Show success notification
+            showNotification('Your message has been sent successfully!', 'success');
+            
+            // Reset button
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            
+            // Fallback to email if the API fails
+            const subject = `OTMR Data Services Inquiry from ${name}`;
+            const body = `Name: ${name}
 Email: ${email}
 Company: ${company || 'Not specified'}
 
 Message:
 ${message}`;
-        
-        const mailtoLink = `mailto:sales@ontrackdata.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        
-        window.location.href = mailtoLink;
-        
-        // Show confirmation message
-        alert('Your email client should open now. If not, please email us directly at sales@ontrackdata.net');
+            
+            const mailtoLink = `mailto:sales@ontrackdata.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+            
+            // Show error notification
+            showNotification('There was an error sending your message. Opening email client instead.', 'error');
+            
+            // Reset button
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        });
     });
 
     // Animation on scroll

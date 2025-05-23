@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/api/slack-webhook", "destination": "/api/slack-webhook.js" }
+  ],
+  "functions": {
+    "api/*.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "outputDirectory": "docs"
+}

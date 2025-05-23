@@ -1,0 +1,11 @@
+{
+  "name": "ontrack-landing",
+  "version": "1.0.0",
+  "description": "OnTrack Data Services landing page",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
