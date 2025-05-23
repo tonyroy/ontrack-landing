@@ -43,37 +43,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Contact form handling
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const company = formData.get('company');
-            const message = formData.get('message');
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const company = document.getElementById('company').value;
+        const message = document.getElementById('message').value;
+        
+        const subject = `OTMR Data Services Inquiry from ${name}`;
+        const body = `Name: ${name}
+Email: ${email}
+Company: ${company || 'Not specified'}
 
-            // Simple validation
-            if (!name || !email || !message) {
-                showNotification('Please fill in all required fields.', 'error');
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                showNotification('Please enter a valid email address.', 'error');
-                return;
-            }
-
-            // Simulate form submission (replace with actual form handling)
-            showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
-            this.reset();
-            
-            // In a real application, you would send this data to your server
-            console.log('Form submitted:', { name, email, company, message });
-        });
-    }
+Message:
+${message}`;
+        
+        const mailtoLink = `mailto:sales@ontrackdata.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        window.location.href = mailtoLink;
+        
+        // Show confirmation message
+        alert('Your email client should open now. If not, please email us directly at sales@ontrackdata.net');
+    });
 
     // Animation on scroll
     const observerOptions = {
